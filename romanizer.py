@@ -347,7 +347,7 @@ class Pronouncer(object):
                         syllable.final = None
                         change_to = {'ᄉ': 'ㅆ'}
                         next_syllable.initial = change_to[next_syllable.initial]
-                        
+            '''            
             if syllable.final in ['ᇂ']:
                 if next_syllable:
                     if next_syllable.initial in ['ᄀ', 'ᄃ', 'ᄌ']:
@@ -368,6 +368,16 @@ class Pronouncer(object):
                         syllable.final = 'ᆯ'
                         change_to = {'ᄀ': 'ᄏ', 'ᄃ': 'ᄐ', 'ᄌ': 'ᄎ'}
                         next_syllable.initial = change_to[next_syllable.initial]
+            '''
+
+            if syllable.final in ['ᇂ', 'ᆭ', 'ᆶ']:
+                if next_syllable:
+                    if next_syllable.initial in ['ᄀ', 'ᄃ', 'ᄌ']:
+                        change_to_final = {'ᇂ': None, 'ᆭ': 'ᆫ', 'ᆶ': 'ᆯ'}
+                        change_to_initial = {'ᄀ': 'ᄏ', 'ᄃ': 'ᄐ', 'ᄌ': 'ᄎ'}
+                        syllable.final = change_to_final[syllable.final]
+                        next_syllable.initial = change_to_initial[next_syllable.initial]
+                        
                         
                         
 #===================================================================================================================================
@@ -381,18 +391,18 @@ class Pronouncer(object):
                         next_syllable.initial = change_to[next_syllable.initial]
 
             # 불파음 ㄱ, ㄷ, ㅂ vs 비음 ㄴ, ㅁ            
-            if syllable.final in ['ᆨ', 'ᆮ', 'ᆸ']:
+            if syllable.final in ['ᆨ', 'ᆰ', 'ᆮ', 'ᆸ']:
                 if next_syllable:
                     if next_syllable.initial in ['ᄂ', 'ᄆ']:                        
-                        change_to = {'ᆨ': 'ᆼ', 'ᆮ': 'ᆫ', 'ᆸ': 'ᆷ'}
+                        change_to = {'ᆨ': 'ᆼ', 'ᆰ': 'ᆼ', 'ᆮ': 'ᆫ', 'ᆸ': 'ᆷ'}
                         syllable.final = change_to[syllable.final]                        
                         
             # 불파음 ㄱ, ㄷ, ㅂ vs 탄음 ㄹ           
-            if syllable.final in ['ᆨ', 'ᆮ', 'ᆸ']:
+            if syllable.final in ['ᆨ', 'ᆰ', 'ᆮ', 'ᆸ']:
                 if next_syllable:
                     if next_syllable.initial in ['ᄅ']:                        
                         change_to_initial = {'ᄅ': 'ᄂ'}
-                        change_to_final = {'ᆨ': 'ᆼ', 'ᆮ': 'ᆫ', 'ᆸ': 'ᆷ'}
+                        change_to_final = {'ᆨ': 'ᆼ', 'ᆰ': 'ᆼ', 'ᆮ': 'ᆫ', 'ᆸ': 'ᆷ'}
                         syllable.final = change_to_final[syllable.final]                                
                         next_syllable.initial = change_to_initial[next_syllable.initial]
 
@@ -472,4 +482,4 @@ class Romanizer(object):
 
 
 if __name__ == "__main__":
-    print(Romanizer("밝뭉너안미긁다잉").romanize())
+    print(Romanizer("좋니").romanize())
