@@ -1,4 +1,5 @@
 import re
+
 '''
 ### Transcribing vowels ###
 '''
@@ -27,20 +28,9 @@ vowel = {
     'ㅙ' : 'wae',
     'ㅝ' : 'wo',
     'ㅞ' : 'we',
-    'ㅢ' : 'ui', # [붙임 1] ‘ㅢ’는 ‘ㅣ’로 소리 나더라도 ‘ui’로 적는다.
+    'ㅢ' : 'ui', # ‘ㅢ’는 ‘ㅣ’로 소리 나더라도 ‘ui’로 적는다.
 }
 
-'''
-### Transcribing consonants ###
-
-Consonants are defined in separate dicts, choseong and jongseong,
-for some characters are pronounced differently depending on 
-its position in the syllable.
-
-e.g. ㄱ, ㄷ, ㅂ, ㄹ are (g, d, b, r) in onset,
-                  but (k, t, p, l) in coda.
-e.g. ㅇ is a null sound when placed in onset, but becomes [ng] in coda.
-'''
 
 # 초성 Choseong (Syllable Onset)
 onset = {
@@ -71,13 +61,7 @@ onset = {
     'ᄋ' : '',
 }
 
-'''
-종성 Jongseong (Syllable Coda)
-
-"The 7 Jongseongs (7종성)"
-Only the seven consonants below may appear in coda position
-'''
-
+# 종성 Jongsung (Syllable Coda) 
 coda = {
     # 파열음 stops/plosives
     'ᆨ' : 'k',
@@ -108,8 +92,6 @@ double_consonant_final = {
     'ᆹ' : ('ᆸ', 'ᆺ'),
     'ᆻ' : ('ᆺ', 'ᆺ')
 }
-
-NULL_CONSONANT = 'ᄋ'
 
 NULL_CONSONANT = 'ᄋ'
 
@@ -188,9 +170,7 @@ class Syllable(object):
 class Pronouncer(object):
     def __init__(self, text):
         self._syllables = [Syllable(char) for char in text]
-        print(f'_syllables: {self._syllables}')
         self.pronounced = ''.join([ str(c) for c in self.final_substitute()])
-        print(f'pronounced: {self.pronounced}')
     
     def final_substitute(self):
         for idx, syllable in enumerate(self._syllables):
@@ -198,18 +178,16 @@ class Pronouncer(object):
                 next_syllable = self._syllables[idx+1]
             except IndexError:
                 next_syllable = None
-            print(f'next_syllable: {next_syllable}')    
             
             try:    
                 final_is_before_C = syllable.final and next_syllable.getattr(initial) not in (None, NULL_CONSONANT)
             except AttributeError:
                 final_is_before_C = False
-            print(f'final_is_before_C: {final_is_before_C}')
+
             try:    
                 final_is_before_V = syllable.final and next_syllable.initial is None
             except AttributeError:
                 final_is_before_V = False 
-            print(f'final_is_before_V: {final_is_before_V}')
             
             # 1. 받침 ‘ㄲ, ㅋ’, ‘ㅅ, ㅆ, ㅈ, ㅊ, ㅌ’, ‘ㅍ’은 어말 또는 자음 앞에서 각각 대표음 [ㄱ, ㄷ, ㅂ]으로 발음한다.
             # 2. 겹받침 ‘ㄳ’, ‘ㄵ’, ‘ㄼ, ㄽ, ㄾ’, ‘ㅄ’은 어말 또는 자음 앞에서 각각 [ㄱ, ㄴ, ㄹ, ㅂ]으로 발음한다.
@@ -422,11 +400,6 @@ class Pronouncer(object):
 # 연음 #============================================================================================================================       
 #===================================================================================================================================                           
 
-# 아스키코드는 안됨! 초성 종성의 길이가 다름 
-#                         받침 ㄱ -> 초성 ㄱ (4520 -> 4352 (168))
-#                         change_to = {'ᄋ': chr(ord(syllable.final)-168)}
-
-
             prolonged = {'ᆨ':'ᄀ', 'ᆩ':'ᄁ', 'ᆫ':'ᄂ', 'ᆮ':'ᄃ', 'ᆯ':'ᄅ', 'ᆷ':'ᄆ', 'ᆸ':'ᄇ', 'ᆺ':'ᄉ',
                   'ᆻ':'ᄊ', 'ᆽ':'ᄌ', 'ᆾ':'ᄎ', 'ᆿ':'ᄏ', 'ᇀ':'ᄐ', 'ᇁ':'ᄑ'}
     
@@ -443,10 +416,7 @@ class Pronouncer(object):
                     if next_syllable.initial in ['ᄋ']:
                         syllable.final = None
 #                         change_to = {'ᄋ': 'ᄀ'}
-#                         next_syllable.initial = change_to[next_syllable.initial]
-                        
-                        
-
+#                         next_syllable.initial = change_to[next_syllable.initial]                                            
 #===============================================================================================================================
 
             if(syllable.final or final_is_before_C): 
@@ -493,8 +463,6 @@ class Romanizer(object):
         for char in pronounced:
             if (re.match(hangul, char)):
                 s = Syllable(char)
-                print(f's : {s}')
-
                 _romanized += onset[s.initial] + vowel[s.medial] + coda[s.final]
                 
             else:
