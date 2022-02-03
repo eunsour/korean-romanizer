@@ -338,37 +338,12 @@ class Pronouncer(object):
                 if next_syllable:
                     if next_syllable.initial in ['ᄂ']:
                         syllable.final = 'ᆫ'
-                        # change_to = {'ᄂ': 'ᄌ'}
-                        # next_syllable.initial = change_to[next_syllable.initial]
-                        
-            if syllable.final in ['ᇂ']:
-                if next_syllable:
-                    if next_syllable.initial in ['ᄉ']:
+                
+                    elif  next_syllable.initial in ['ᄉ']:
                         syllable.final = None
                         change_to = {'ᄉ': 'ㅆ'}
                         next_syllable.initial = change_to[next_syllable.initial]
-            '''            
-            if syllable.final in ['ᇂ']:
-                if next_syllable:
-                    if next_syllable.initial in ['ᄀ', 'ᄃ', 'ᄌ']:
-                        syllable.final = None
-                        change_to = {'ᄀ': 'ᄏ', 'ᄃ': 'ᄐ', 'ᄌ': 'ᄎ'}
-                        next_syllable.initial = change_to[next_syllable.initial]
 
-            if syllable.final in ['ᆭ']:
-                if next_syllable:
-                    if next_syllable.initial in ['ᄀ', 'ᄃ', 'ᄌ']:
-                        syllable.final = 'ᆫ'
-                        change_to = {'ᄀ': 'ᄏ', 'ᄃ': 'ᄐ', 'ᄌ': 'ᄎ'}
-                        next_syllable.initial = change_to[next_syllable.initial]                        
-
-            if syllable.final in ['ᆶ']:
-                if next_syllable:
-                    if next_syllable.initial in ['ᄀ', 'ᄃ', 'ᄌ']:
-                        syllable.final = 'ᆯ'
-                        change_to = {'ᄀ': 'ᄏ', 'ᄃ': 'ᄐ', 'ᄌ': 'ᄎ'}
-                        next_syllable.initial = change_to[next_syllable.initial]
-            '''
 
             if syllable.final in ['ᇂ', 'ᆭ', 'ᆶ']:
                 if next_syllable:
@@ -377,8 +352,6 @@ class Pronouncer(object):
                         change_to_initial = {'ᄀ': 'ᄏ', 'ᄃ': 'ᄐ', 'ᄌ': 'ᄎ'}
                         syllable.final = change_to_final[syllable.final]
                         next_syllable.initial = change_to_initial[next_syllable.initial]
-                        
-                        
                         
 #===================================================================================================================================
 # 자음 동화 #========================================================================================================================       
@@ -395,16 +368,15 @@ class Pronouncer(object):
                 if next_syllable:
                     if next_syllable.initial in ['ᄂ', 'ᄆ']:                        
                         change_to = {'ᆨ': 'ᆼ', 'ᆰ': 'ᆼ', 'ᆮ': 'ᆫ', 'ᆸ': 'ᆷ'}
-                        syllable.final = change_to[syllable.final]                        
-                        
-            # 불파음 ㄱ, ㄷ, ㅂ vs 탄음 ㄹ           
-            if syllable.final in ['ᆨ', 'ᆰ', 'ᆮ', 'ᆸ']:
-                if next_syllable:
-                    if next_syllable.initial in ['ᄅ']:                        
+                        syllable.final = change_to[syllable.final]   
+
+                # 불파음 ㄱ, ㄷ, ㅂ vs 탄음 ㄹ  
+                elif next_syllable.initial in ['ᄅ']:                        
                         change_to_initial = {'ᄅ': 'ᄂ'}
                         change_to_final = {'ᆨ': 'ᆼ', 'ᆰ': 'ᆼ', 'ᆮ': 'ᆫ', 'ᆸ': 'ᆷ'}
                         syllable.final = change_to_final[syllable.final]                                
-                        next_syllable.initial = change_to_initial[next_syllable.initial]
+                        next_syllable.initial = change_to_initial[next_syllable.initial]                     
+
 
 #===================================================================================================================================
 # 연음 #============================================================================================================================       
@@ -425,8 +397,7 @@ class Pronouncer(object):
                 if next_syllable:
                     if next_syllable.initial in ['ᄋ']:
                         syllable.final = None
-#                         change_to = {'ᄋ': 'ᄀ'}
-#                         next_syllable.initial = change_to[next_syllable.initial]                                            
+                                          
 #===============================================================================================================================
 
             if(syllable.final or final_is_before_C): 
@@ -446,17 +417,17 @@ class Pronouncer(object):
 #===============================================================================================================================
             # 5. 홑받침이나 쌍받침이 모음으로 시작된 조사나 어미, 접미사와 결합되는 경우에는, 
             # 제 음가대로 뒤 음절 첫소리로 옮겨 발음한다. 
-#             if next_syllable and final_is_before_C:
-#                 if(next_syllable.initial == NULL_CONSONANT):
-#                     next_syllable.initial = next_syllable.final_to_initial(syllable.final)
-#                     syllable.final = None
+            if next_syllable and final_is_before_C:
+                if(next_syllable.initial == NULL_CONSONANT):
+                    next_syllable.initial = next_syllable.final_to_initial(syllable.final)
+                    syllable.final = None
                     
             # 6. 겹받침이 모음으로 시작된 조사나 어미, 접미사와 결합되는 경우에는, 
             # 뒤엣것만을 뒤 음절 첫소리로 옮겨 발음한다.(이 경우, ‘ㅅ’은 된소리로 발음함.)
-#             if syllable.final in double_consonant_final:
-#                 double_consonant = double_consonant_final[syllable.final]
-#                 syllable.final = double_consonant[0]
-#                 next_syllable.initial = next_syllable.final_to_initial(double_consonant[1])
+            if syllable.final in double_consonant_final:
+                double_consonant = double_consonant_final[syllable.final]
+                syllable.final = double_consonant[0]
+                next_syllable.initial = next_syllable.final_to_initial(double_consonant[1])
         return self._syllables
 
     
@@ -482,4 +453,5 @@ class Romanizer(object):
 
 
 if __name__ == "__main__":
-    print(Romanizer("좋니").romanize())
+    print(Romanizer("밝그암늬다낭").romanize())
+    print(Romanizer("밝뭉너안미긁다잉").romanize())
